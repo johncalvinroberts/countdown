@@ -1,11 +1,14 @@
 <script lang="ts">
   import { parseMs } from "./lib/utils";
-  const whenWeAreLeaving = new Date(2022, 4, 5, 9, 50, 0, 0);
+
+  const whenWeAreLeaving = Date.parse(
+    "Thu May 05 2022 09:50:00 GMT+0800 (China Standard Time)"
+  );
 
   let title = "";
   const getTimeRemaining = () => {
     const now = new Date().valueOf();
-    const msRemaining = whenWeAreLeaving.valueOf() - now;
+    const msRemaining = whenWeAreLeaving - now;
     const timeRemaining = parseMs(msRemaining);
     title =
       msRemaining > 0
@@ -14,7 +17,10 @@
     return timeRemaining;
   };
   let timeRemaining = getTimeRemaining();
-  setInterval(() => (timeRemaining = getTimeRemaining()), 1000);
+  setInterval(() => {
+    timeRemaining = getTimeRemaining();
+    document.title = `${timeRemaining.days}:${timeRemaining.days}:${timeRemaining.hours}:${timeRemaining.minutes}:${timeRemaining.seconds}`;
+  }, 1000);
 </script>
 
 <main>
@@ -31,10 +37,11 @@
   </div>
 </main>
 
-<style>
+<style global>
   :root {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --pink: #ffb8ff;
   }
 
   main {
@@ -61,5 +68,10 @@
   }
   small {
     font-size: 1rem;
+  }
+  body {
+    background-color: var(--pink);
+    max-width: 100vw;
+    overflow: hidden;
   }
 </style>
