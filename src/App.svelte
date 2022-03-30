@@ -1,9 +1,23 @@
 <script lang="ts">
   import { parseMs, padTwo } from "./lib/utils";
+  const allSymbols =
+    "🀂🀅🀅🀏🀅🀅🀗🀣🀂🌐♻️㊗️🈴🈵🆎🉐🈷️🈚️🧼🛁🧺🌁🏞💰💰💵💸✈️🛫🛬🛩💺☀︎☼☾☽🃅🃇🃓🃑🃎🀇🀐🀎🀃🀅🀇🀈🀉🀊🀋🀌🀍🀗🀠🀪🀩🀨🀧🀧🀦🀥🀤🀣🀢🀘🀎🀃🀄︎🀫";
 
   const whenWeAreLeaving = Date.parse(
     "Thu May 05 2022 09:50:00 GMT+0800 (China Standard Time)"
   );
+  let selection: string[] = [];
+  const getNextRandomSelection = () => {
+    const allSymbolsArr = allSymbols.split("");
+    const randomIndex = Math.round(Math.random() * allSymbolsArr.length);
+    const chosen = allSymbolsArr[randomIndex];
+    let nextSelection = [...selection];
+    nextSelection.push(chosen);
+    if(nextSelection.length >=4) {
+      [,...nextSelection] = nextSelection
+    }
+    selection = nextSelection;
+  };
 
   let title = "";
   const getTimeRemaining = () => {
@@ -12,13 +26,14 @@
     const timeRemaining = parseMs(msRemaining);
     title =
       msRemaining > 0
-        ? "Time until we leave Shanghai 🀂🀅🀅🀏"
-        : "Time since we left Shanghai 🀅🀅🀗🀣🀂";
+        ? "Time until we leave Shanghai"
+        : "Time since we left Shanghai";
     return timeRemaining;
   };
   let timeRemaining = getTimeRemaining();
   setInterval(() => {
     timeRemaining = getTimeRemaining();
+    getNextRandomSelection();
     document.title = `${timeRemaining.days}:${timeRemaining.days}:${timeRemaining.hours}:${timeRemaining.minutes}:${timeRemaining.seconds}`;
   }, 1000);
 </script>
@@ -27,6 +42,7 @@
   <div>
     <h1>
       {title}
+      {selection.join("")}
     </h1>
     <h2>
       {timeRemaining.days}<small>days</small>
