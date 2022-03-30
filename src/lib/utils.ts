@@ -12,3 +12,7 @@ export const parseMs = (milliseconds: number) => {
     nanoseconds: roundTowardsZero(milliseconds * 1e6) % 1000,
   };
 };
+
+export const padTwo = (n: number) => {
+  return `${n}`.length < 2 ? `0${n}` : `${n}`;
+};
