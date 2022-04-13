@@ -1,20 +1,27 @@
 <script lang="ts">
   import { parseMs, padTwo } from "./lib/utils";
-  const allSymbols =
-    "🀂🀅🀅🀏🀅🀅🀗🀣🀂🌐♻️㊗️🈴🈵🆎🉐🈷️🈚️🧼🛁🧺🌁🏞💰💰💵💸✈️🛫🛬🛩💺☀︎☼☾☽🃅🃇🃓🃑🃎🀇🀐🀎🀃🀅🀇🀈🀉🀊🀋🀌🀍🀗🀠🀪🀩🀨🀧🀧🀦🀥🀤🀣🀢🀘🀎🀃🀄︎🀫";
+
+  const getRandomUnicodeString = (length: number): string => {
+    const array = new Uint16Array(length);
+    window.crypto.getRandomValues(array);
+    let str = "";
+    for (var i = 0; i < array.length; i++) {
+      str += String.fromCharCode(array[i]);
+    }
+    return str;
+  };
 
   const whenWeAreLeaving = Date.parse(
     "Thu May 05 2022 09:50:00 GMT+0800 (China Standard Time)"
   );
+  const hourOfDay = new Date().getHours();
+  const isDark = hourOfDay > 18 || hourOfDay < 10;
   let selection: string[] = [];
   const getNextRandomSelection = () => {
-    const allSymbolsArr = allSymbols.split("");
-    const randomIndex = Math.round(Math.random() * allSymbolsArr.length);
-    const chosen = allSymbolsArr[randomIndex];
-    let nextSelection = [...selection];
-    nextSelection.push(chosen);
-    if(nextSelection.length >=4) {
-      [,...nextSelection] = nextSelection
+    const newSymbol = getRandomUnicodeString(1);
+    let nextSelection = [...selection, newSymbol];
+    if (nextSelection.length >= 20) {
+      [, ...nextSelection] = nextSelection;
     }
     selection = nextSelection;
   };
@@ -38,12 +45,14 @@
   }, 1000);
 </script>
 
-<main>
+<main class:dark={isDark} class:light={!isDark}>
   <div>
     <h1>
       {title}
-      {selection.join("")}
     </h1>
+    <div class="selection">
+      {selection.join("")}
+    </div>
     <h2>
       {timeRemaining.days}<small>days</small>
       {timeRemaining.hours}<small>hrs</small>
@@ -55,10 +64,21 @@
 
 <style global>
   :root {
-    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; */
     font-family: "GT Maru";
     --pink: #ffb8ff;
+    --purple: #180418;
+    --white: #ffffff;
+    --black: #333333;
+  }
+
+  .dark {
+    background-color: var(--purple);
+    color: var(--white);
+  }
+
+  .light {
+    background-color: var(--pink);
+    color: var(--black);
   }
 
   main {
@@ -85,7 +105,6 @@
     font-size: 1rem;
   }
   body {
-    background-color: var(--pink);
     max-width: 100vw;
     overflow: hidden;
   }
@@ -93,6 +112,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  .selection {
+    max-width: 400px;
+    text-overflow: ellipsis;
+    text-align: center;
+    margin: 0 auto;
   }
   @font-face {
     font-family: "GT Maru";
