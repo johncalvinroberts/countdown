@@ -12,7 +12,7 @@
   };
 
   const whenWeAreLeaving = Date.parse(
-    "Thu May 05 2022 09:50:00 GMT+0800 (China Standard Time)"
+    "Thu May 05 2022 20:10:00 GMT+0800 (China Standard Time)"
   );
   const hourOfDay = new Date().getHours();
   const isDark = hourOfDay > 18 || hourOfDay < 10;
